@@ -11,6 +11,7 @@ import (
 type ResDirectory struct {
 	path                string
 	DrawableDirectories []*DrawableDirectory
+	ValuesDirectories   []*ValuesDirectory
 }
 
 func NewResDirectory(path string) (*ResDirectory, error) {
@@ -23,6 +24,7 @@ func NewResDirectory(path string) (*ResDirectory, error) {
 	r := &ResDirectory{
 		path,
 		[]*DrawableDirectory{},
+		[]*ValuesDirectory{},
 	}
 	err = r.buildTree()
 
@@ -46,6 +48,10 @@ func (r *ResDirectory) buildTree() error {
 			// Drawable directory
 			if dir, err := NewDrawableDirectory(path); err == nil {
 				r.DrawableDirectories = append(r.DrawableDirectories, dir)
+			}
+		}	else if strings.HasPrefix(file.Name(), "values")	{ // values
+			if dir, err := NewValuesDirectory(path); err == nil {
+				r.ValuesDirectories = append(r.ValuesDirectories, dir)
 			}
 		}
 	}
